@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  netdevops-server:
+    build: .
+    image: app-redes-vpn:v2
+    container_name: netdevops_automation
+
+    networks:
+      gns3_oob:
+        ipv4_address: 192.168.122.100
+
+networks:
+  gns3_oob:
+    driver: bridge
+    ipam:
+      config:
+      
+        - subnet: 192.168.122.0/24
+          gateway: 192.168.122.1
