@@ -39,6 +39,6 @@ docker exec -it <redes-vpn-1> python App.py --verify
 - **GNS3**
 
 ## Autores
-- [Cristobal Figueroa, Dylan Palavecino, Bairon Chihuaicura]
+- Cristobal Figueroa, Dylan Palavecino, Bairon Chihuaicura
 - Asignatura: Redes Avanzadas I
 - Sede: Inacap Temuco
