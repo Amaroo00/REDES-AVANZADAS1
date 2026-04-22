@@ -88,7 +88,7 @@ def verificar():
             net.enable()
             res = net.send_command("ping 192.168.30.1 source 192.168.10.1")
             print(f"\nResultado Ping: {res}")
-            if "!!!" in res: print("✅ ¡VPN FUNCIONANDO AL 100%!")
+            if "!!!" in res: print(" ¡VPN FUNCIONANDO AL 100%!")
     except: pass
 
 if __name__ == "__main__":
