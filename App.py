@@ -56,7 +56,7 @@ def configurar_r3_api():
             net.send_command("/ip service set www disabled=no port=80")
             logging.info("Servicio API REST (WWW) activado en R3.")
 
-        # SEGUNDO: Configurar vía API REST (Requerimiento 3.5)
+        # SEGUNDO: Configurar vía API REST 
         # 1. Profile y Proposal
         requests.patch(f"{R3_API}/ip/ipsec/profile/*1", json={"hash-algorithm": "sha1", "enc-algorithm": "aes-128", "dh-group": "modp1024"}, auth=R3_AUTH)
         requests.patch(f"{R3_API}/ip/ipsec/proposal/*1", json={"auth-algorithms": "sha1", "enc-algorithms": "aes-128-cbc", "pfs-group": "none"}, auth=R3_AUTH)
@@ -72,7 +72,7 @@ def configurar_r3_api():
         }
         res = requests.put(f"{R3_API}/ip/ipsec/policy", json=policy_payload, auth=R3_AUTH)
         
-        # Parseo JSON obligatorio (Pauta 3.5)
+        # Parseo JSON obligatorio 
         if res.status_code in [200, 201]:
             data = json.loads(res.text)
             logging.info(f"Política IPSec creada vía API: {data}")
