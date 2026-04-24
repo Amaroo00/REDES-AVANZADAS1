@@ -5,6 +5,8 @@ services:
     build: .
     image: app-redes-vpn:v2
     container_name: netdevops_automation
+    tty: true          #
+    stdin_open: true   # 
 
     networks:
       gns3_oob:
@@ -15,6 +17,6 @@ networks:
     driver: bridge
     ipam:
       config:
-      
         - subnet: 192.168.122.0/24
           gateway: 192.168.122.1
+
