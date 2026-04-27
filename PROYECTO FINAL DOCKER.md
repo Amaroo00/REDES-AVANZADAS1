@@ -10,25 +10,30 @@ Este proyecto forma parte de la Evaluación 01 de la asignatura Redes Avanzadas 
 
 ## Instrucciones de Ejecución
 
-### 1. Preparación del Entorno
-Asegúrate de tener GNS3 abierto y los routers encendidos. Desde la terminal en esta carpeta, construye y levanta el contenedor:
+### 1. Construcción de la Imagen Docker
+Para asegurar que el contenedor utilice la versión correcta, construye la imagen localmente en la terminal de tu PC:
 
 ```bash
-docker-compose up -d --build
+docker build -t app-redes-vpn:v3 .
 ```
 
-### 2. Ejecutar Automatización
-Para configurar toda la red Interfaces, Rutas y VPN, ejecuta:
+### 2. Integración y Ejecución en GNS3
+1. Agrega el nodo Docker (usando la imagen `app-redes-vpn:v3`) a tu topología en GNS3.
+2. En la opción **Edit Config** del nodo, configúrale la IP estática `192.168.122.100`.
+3. Inicia el nodo y abre su **Console**.
+
+### 3. Ejecutar Automatización
+Dentro de la consola del Docker en GNS3, ejecuta el script principal para configurar los routers:
 
 ```bash
-docker exec -it <Iredes-vpn-1> python App.py
+python App.py
 ```
 
-### 3. Verificar Conectividad
-Para validar el estado de la VPN y realizar pruebas de ping LAN-to-LAN:
+### 4. Verificar Conectividad
+Para validar las tablas de ruteo, el estado de la VPN (Fase 1 y 2) y el ping cruzado, ejecuta en la misma consola:
 
-```bashAmaroo00/redes-avanzadas-ev1
-docker exec -it <redes-vpn-1> python App.py --verify
+```bash
+python App.py --verify
 ```
 
 ## Tecnologías Utilizadas
