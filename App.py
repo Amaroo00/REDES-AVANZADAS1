@@ -100,20 +100,78 @@ def configurar_r3_api():
     except Exception as e:
         logging.error(f"Error en automatización R3: {e}")
 
-def verificar():
-    """Validación de conectividad LAN-to-LAN (Pauta 4.5)"""
-    logging.info(">>> VERIFICANDO TÚNEL VPN IPSEC")
+def verificar_r1():
+    print("\n" + "=" * 50)
+    print("VERIFICACIÓN R1 (Cisco)")
+    print("=" * 50)
     try:
         with ConnectHandler(**R1) as net:
             net.enable()
-            res = net.send_command("ping 192.168.30.1 source 192.168.10.1")
-            print(f"\nPrueba de conectividad R1 -> R3: {res}")
+            print("\n--- Hostname ---")
+            print(net.send_command("show running-config | include hostname"))
+            print("\n--- Interfaces IP ---")
+            print(net.send_command("show ip interface brief"))
+            print("\n--- Rutas ---")
+            print(net.send_command("show ip route"))
+            print("\n--- ISAKMP SA ---")
+            print(net.send_command("show crypto isakmp sa"))
+            print("\n--- IPSEC SA ---")
+            print(net.send_command("show crypto ipsec sa"))
+            print("\n--- Crypto Map ---")
+            print(net.send_command("show crypto map"))
+            print("\n--- Ping a R3 ---")
+            res = net.send_command("ping 192.168.30.1 source 192.168.10.1 repeat 10")
+            print(res)
             if "!!!" in res:
                 print("\n" + "*"*45)
                 print(" RESULTADO: VPN OPERATIVA (TRÁNSITO VIA ISP) ")
                 print("*"*45)
     except Exception as e:
-        logging.error(f"Error en verificación: {e}")
+        print(f"Error verificando R1: {e}")
+
+def verificar_r2():
+    print("\n" + "=" * 50)
+    print("VERIFICACIÓN R2 (Cisco)")
+    print("=" * 50)
+    try:
+        with ConnectHandler(**R2) as net:
+            net.enable()
+            print("\n--- Interfaces IP ---")
+            print(net.send_command("show ip interface brief"))
+            print("\n--- Rutas ---")
+            print(net.send_command("show ip route"))
+    except Exception as e:
+        print(f"Error verificando R2: {e}")
+
+def verificar_r3():
+    print("\n" + "=" * 50)
+    print("VERIFICACIÓN R3 (MikroTik)")
+    print("=" * 50)
+    try:
+        with ConnectHandler(**R3_SSH) as net:
+            print("\n--- Sistema ---")
+            print(f"Hostname: {net.send_command('/system identity print')}")
+            print("\n--- Interfaces IP ---")
+            print(net.send_command('/ip address print'))
+            print("\n--- Rutas ---")
+            print(net.send_command('/ip route print'))
+            print("\n--- IPSec Peers ---")
+            print(net.send_command('/ip ipsec peer print'))
+            print("\n--- IPSec Policies ---")
+            print(net.send_command('/ip ipsec policy print'))
+    except Exception as e:
+        print(f"Error verificando R3 via SSH: {e}")
+
+def verificar():
+    print("\n" + "=" * 60)
+    print("VERIFICACIÓN COMPLETA DE LA RED VPN")
+    print("=" * 60)
+    verificar_r1()
+    verificar_r2()
+    verificar_r3()
+    print("\n" + "=" * 60)
+    print("VERIFICACIÓN FINALIZADA")
+    print("=" * 60)
 
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == "--verify":
