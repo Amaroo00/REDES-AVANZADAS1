@@ -5,9 +5,9 @@ import sys
 import requests
 from netmiko import ConnectHandler
 
-# VERSION FINAL - CUMPLIMIENTO RÚBRICA
+# VERSION FINAL - AUTOMATIZACIÓN VPN
 print("\n" + "="*50)
-print(" AUTOMATIZACIÓN NETDEVOPS - EVALUACIÓN 1 ")
+print(" AUTOMATIZACIÓN NETDEVOPS - DESPLIEGUE VPN ")
 print("="*50 + "\n")
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -25,7 +25,7 @@ R3_API = "http://192.168.122.30/rest"
 R3_AUTH = (MIKROTIK_USER, MIKROTIK_PASS)
 
 def configurar_cisco():
-    """Automatización Legacy via SSH para R1 y R2 (Pauta 3.4)"""
+    """Automatización via SSH para Cisco R1 y R2"""
     logging.info(">>> INICIANDO AUTOMATIZACIÓN CISCO")
     try:
         # Configuración R2 (Router ISP)
@@ -64,7 +64,7 @@ def configurar_cisco():
         logging.error(f"Error en automatización Cisco: {e}")
 
 def configurar_r3_api():
-    """Automatización Moderna via API REST para R3 (Pauta 3.5)"""
+    """Automatización via API REST para MikroTik R3"""
     logging.info(">>> INICIANDO AUTOMATIZACIÓN MIKROTIK (API REST)")
     try:
         # Preparación base vía SSH
@@ -90,9 +90,9 @@ def configurar_r3_api():
         }
         res = requests.put(f"{R3_API}/ip/ipsec/policy", json=payload, auth=R3_AUTH)
         
-        # --- PARSEO JSON (Requisito 3.5 obligatorio) ---
+        # --- PARSEO DE RESPUESTA JSON ---
         if res.status_code in [200, 201]:
-            data = json.loads(res.text) # json.loads para demostrar parseo
+            data = json.loads(res.text) # Convertir string JSON a diccionario
             logging.info(f"ÉXITO: Política IPsec creada en MikroTik con ID: {data.get('.id')}")
         else:
             logging.error(f"Error en API REST: {res.text}")
@@ -120,7 +120,7 @@ def verificar_r1():
             print("\n--- Crypto Map ---")
             print(net.send_command("show crypto map"))
             print("\n--- Ping a R3 ---")
-            res = net.send_command("ping 192.168.30.1 source 192.168.10.1 repeat 10")
+            res = net.send_command("ping 192.168.30.1 source 192.168.10.1 repeat 10", read_timeout=30)
             print(res)
             if "!!!" in res:
                 print("\n" + "*"*45)
