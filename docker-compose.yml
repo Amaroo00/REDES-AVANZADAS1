@@ -3,7 +3,7 @@ version: '3.8'
 services:
   netdevops-server:
     build: .
-    image: app-redes-vpn:v2
+    image: app-redes-vpn:v3
     container_name: netdevops_automation
     tty: true          #
     stdin_open: true   # 
